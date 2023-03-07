@@ -11,6 +11,7 @@ print("start")
 pin=2
 wiringpi.wiringPiSetup()
 wiringpi.pinMode(pin,1)
+i=0
 
 while i>=0:
     i+=1
