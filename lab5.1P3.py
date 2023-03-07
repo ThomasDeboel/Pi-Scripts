@@ -1,6 +1,7 @@
 import time
 import wiringpi
 import sys
+    
 
 print("start")
 pin=2
@@ -17,13 +18,19 @@ i=0
 while i>=0:
     i+=1
     wiringpi.digitalWrite(pin, 1)
+    time.sleep(.1)
     wiringpi.digitalWrite(pin_2, 1)
+    time.sleep(.1)
     wiringpi.digitalWrite(pin_3, 1)
+    time.sleep(.1)
     wiringpi.digitalWrite(pin_4, 1)
-    time.sleep(.1)
+    time.sleep(.5)
     wiringpi.digitalWrite(pin, 0)
-    wiringpi.digitalWrite(pin_2, 0)
-    wiringpi.digitalWrite(pin_3, 0)
-    wiringpi.digitalWrite(pin_4, 0)
     time.sleep(.1)
+    wiringpi.digitalWrite(pin_2, 0)
+    time.sleep(.1)
+    wiringpi.digitalWrite(pin_3, 0)
+    time.sleep(.1)
+    wiringpi.digitalWrite(pin_4, 0)
+    time.sleep(.5)
     print(i)
