@@ -18,3 +18,4 @@ for i in range(0,10):
     blink(pin)
 
 print("done")
+print("help")
