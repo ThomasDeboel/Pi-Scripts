@@ -2,8 +2,8 @@ import time
 import wiringpi
 import sys
 
-trgpin = 1
-echopin= 2
+trgpin = 1 #pin 5 (w1)
+echopin= 2 #pin 7 (w2)
 wiringpi.wiringPiSetup()
 wiringpi.pinMode(trgpin,1)
 wiringpi.pinMode(echopin,0)
