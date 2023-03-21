@@ -39,7 +39,7 @@ try :
         tmp1 = readadc(3) # read channel 2
         DeactivateADC()
         temp= 3.3* tmp0 *100/1023 #calculate temp
-        lightlevel=tmp0*100/1023
+        lightlevel=tmp1*100/1023
 
 
         data= {
