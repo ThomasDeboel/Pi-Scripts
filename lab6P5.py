@@ -1,5 +1,3 @@
-
-
 import wiringpi
 import time
 import json
@@ -40,16 +38,17 @@ try :
         ActivateADC ()
         tmp1 = readadc(3) # read channel 2
         DeactivateADC()
-        
-        
+        temp= 3.3* tmp0 *100/1023 #calculate temp
+        lightlevel=tmp0*100/1023
+
 
         data= {
             " id": uid,
             " sensors ":[{
             "id": 'adc ch0',
-            ' data': tmp0},
+            ' data': temp},
             {'id': 'adc chl',
-             'data':tmp1}]
+             'data':lightlevel}]
         }
         r=requests.post(url, verify=False, json=data)
         print(tmp0,tmp1)
