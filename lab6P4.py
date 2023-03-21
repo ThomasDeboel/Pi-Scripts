@@ -17,23 +17,21 @@ def readadc(adcnum) :
 
 #Setup
 pin_CS_adc = 16
-wiringpi.wiringPiSetup ( )
+pinl1=1
+pinl2=2
+wiringpi.wiringPiSetup ()
 wiringpi.pinMode (pin_CS_adc, 1)
+wiringpi.pinMode (pinl1, 1)
+wiringpi.pinMode (pinl2, 1)
 wiringpi.wiringPiSPISetupMode (1,0,500000,0)
-#wiringpi.wiringPiSPISetupMode (2,1,500000,0)
 
 try :
     while True :
         ActivateADC ()
-        tmp0 = readadc(0) # read channel 0
+        tmp0 = readadc(4) # read channel 3
         DeactivateADC()
-        time.sleep(.2)
-        ActivateADC()
-        tmp1 = readadc(1)
-        DeactivateADC()
-        print (" input0 : " , tmp0)
-        time.sleep(.2)
-        print (" input1 : " , tmp1)
+        lightlevel=tmp0*100/1023
+        print(lightlevel)
         time.sleep (0.5)
 except KeyboardInterrupt:
     DeactivateADC()

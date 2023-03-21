@@ -1,5 +1,10 @@
+
+
 import wiringpi
 import time
+import json
+import requests
+
 def ActivateADC():
     wiringpi.digitalWrite(pin_CS_adc,0)
     time.sleep(0.000005)
@@ -17,24 +22,39 @@ def readadc(adcnum) :
 
 #Setup
 pin_CS_adc = 16
-wiringpi.wiringPiSetup ( )
+pinl1=1
+pinl2=2
+wiringpi.wiringPiSetup ()
 wiringpi.pinMode (pin_CS_adc, 1)
+wiringpi.pinMode (pinl1, 1)
+wiringpi.pinMode (pinl2, 1)
 wiringpi.wiringPiSPISetupMode (1,0,500000,0)
-#wiringpi.wiringPiSPISetupMode (2,1,500000,0)
+url="http://thomasdb.hub.ubeac.io/iotessThomas"
+uid="IOTESSThomas"
 
 try :
     while True :
         ActivateADC ()
-        tmp0 = readadc(0) # read channel 0
+        tmp0 = readadc(0) # read channel 2
         DeactivateADC()
-        time.sleep(.2)
-        ActivateADC()
-        tmp1 = readadc(1)
+        ActivateADC ()
+        tmp1 = readadc(1) # read channel 2
         DeactivateADC()
-        print (" input0 : " , tmp0)
-        time.sleep(.2)
-        print (" input1 : " , tmp1)
-        time.sleep (0.5)
+        
+
+
+        data= {
+            " id": uid,
+            " sensors ":[{
+            "id": 'adc ch0',
+            ' data': tmp0},
+            {'id': 'adc chl',
+             'data':tmp1}]
+        }
+        r=requests.post(url, verify=False, json=data)
+        print(tmp0,tmp1)
+        time.sleep(1)
+
 except KeyboardInterrupt:
     DeactivateADC()
     print("\nProgram terminated")
