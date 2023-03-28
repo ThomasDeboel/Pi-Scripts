@@ -33,26 +33,29 @@ uid="IOTESSThomas"
 try :
     while True :
         ActivateADC ()
-        tmp0 = readadc(2) # read channel 2
+        tmp0 = readadc(0) # read channel 2
         DeactivateADC()
         ActivateADC ()
-        tmp1 = readadc(3) # read channel 2
+        tmp1 = readadc(1) # read channel 2
         DeactivateADC()
         temp= 3.3* tmp0 *100/1023 #calculate temp
         lightlevel=tmp1*100/1023
 
 
         data= {
-            " id": uid,
-            " sensors ":[{
-            "id": 'adc ch0',
-            ' data': temp},
-            {'id': 'adc chl',
+            "id": uid,
+            "sensors ":[{
+            "id": 'tempsens',
+            'type':'4',
+            ' data': int(temp)},
+            {'uid': 'lightlevelsens',
+             'type': '11',
              'data':lightlevel}]
         }
         r=requests.post(url, verify=False, json=data)
-        print(tmp0,tmp1)
+        print(int(temp),lightlevel)
         time.sleep(1)
+
 
 except KeyboardInterrupt:
     DeactivateADC()
