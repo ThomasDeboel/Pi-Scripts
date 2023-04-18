@@ -4,7 +4,7 @@ import sys
 
 def controlLEDs(sig1, sig2, cnt, wait):
     wiringpi.softPwmWrite(sig1, cnt)
-    wiringpi.softPwmWrite(sig2, 100-cnt)
+    wiringpi.softPwmWrite(sig2, cnt *(-1))
     time. sleep (wait)
 
 #Setup
@@ -20,14 +20,20 @@ wiringpi.softPwmCreate(pin5, 0, 100)
 
 #start pwm
 wiringpi.softPwmWrite(pin2, 0)
-wiringpi.softPwmWrite(pin5, 100)
+wiringpi.softPwmWrite(pin5, 0)
 
 try:
     while True:
-        for i in range (0,101):     #101 because when it stops when it finishes 100
+        for i in range(0,101):  
             controlLEDs(pin2,pin5,i,pause_time)
-        for i in range(100,-1,-1):  # from 100 to zero in steps of -1
+        for i in range (100,-1,-1):
             controlLEDs(pin2,pin5,i,pause_time)
+        for i in range (0,-101,-1):
+            controlLEDs(pin2,pin5,i,pause_time)
+        for i in range(-100,0):  
+            controlLEDs(pin2,pin5,i,pause_time)
+        
+        
 
 except KeyboardInterrupt:
     wiringpi.softPwmWrite(pin2,0)   #stops the pwm output
