@@ -49,7 +49,7 @@ try :
             "id": 'adc ch0',
             ' data': tmp0},
             {'id': 'adc chl',
-             'data':tmp1}]
+            'data':tmp1}]
         }
         r=requests.post(url, verify=False, json=data)
         print(tmp0,tmp1)
