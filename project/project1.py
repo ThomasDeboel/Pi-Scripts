@@ -78,12 +78,13 @@ wiringpi.wiringPiSetup()
 wiringpi.pinMode(trgpin,1)
 wiringpi.pinMode(echopin,0)
 #echo end
+
 #ubeac setup
 url="http://thomasdb.hub.ubeac.io/iotessThomas"
 uid="IOTESSThomas"
 #ubeac end
 
-def motordraai(aantalturns):
+def motordraai(aantalturns): #laat de motor draaien voor "aantal turns"
     while (turning<aantalturns):
         turning +=1
         wiringpi.digitalWrite(pin_4,0)
@@ -99,7 +100,7 @@ def motordraai(aantalturns):
         wiringpi.digitalWrite(pin_1,1)
         time.sleep(0.005)
 
-def motordraaireverse(aantalturns):
+def motordraaireverse(aantalturns): #laat de motor draaien voor "aantal turns in revers"
     while (turning<aantalturns):
         turning +=1
         wiringpi.digitalWrite(pin_4,1)
@@ -115,13 +116,13 @@ def motordraaireverse(aantalturns):
         wiringpi.digitalWrite(pin_1,0)
         time.sleep(0.005)
 
-def alarmlightson():
+def alarmlightson(): #turns alarm on met alternerende led
     wiringpi.digitalWrite(alarmpin,1)
     time.sleep(1)
     wiringpi.digitalWrite(alarmpin,0)
     time.sleep(1)
 
-def alarmlightoff():
+def alarmlightoff(): #turns alarm light off
     wiringpi.digitalWrite(alarmpin,0)
 
 #lcd starting
@@ -129,19 +130,13 @@ lcd_1.clear()
 lcd_1.set_backlight(1)
 #lcd starting
 
-def lcd(triggercounter, currenttime,status):
+def lcd(triggercounter, currenttime,status): #laat lcd werken met de currenttime, status van de trap en de aantal triggers sinds het begin.
     ActivateLCD()
     lcd_1.clear()
-    lcd_1.go_to_xy(0, 0)
-    lcd_1.put_string("Current Time =" + currenttime +"\nTrapstatus: "+ status +"\nnumber of alarms: "+ triggercounter)
-
-    if status!="triggered":
-        lcd_1.put_string("Current Time =" + currenttime +"\nTrapstatus: "+ status +"\nnumber of alarms: "+ triggercounter)
-    else:
-        lcd_1.put_string("Current Time =" + currenttime +"\nTrapstatus: armed\nnumber of alarms: "+ triggercounter)
+    lcd_1.go_to_xy(0, 0) #gaat naar 0,0 op het scherm
+    lcd_1.put_string("Current Time =" + currenttime +"\nTrapstatus: "+ status +"\nnumber of alarms: "+ triggercounter) #toont dit op heet scherm
     lcd_1.refresh()
     DeactivateLCD()
-    time.sleep(1)
 
 def ubeac(triggercount, time, status):
     data= {
@@ -156,34 +151,42 @@ def ubeac(triggercount, time, status):
 
 
 try:
+    #onderstaande code leest de afstand
     wiringpi.digitalWrite(trgpin, 1)
     time.sleep(.000010)
     wiringpi.digitalWrite(trgpin, 0)
     print("send signal")
     while (wiringpi.digitalRead(echopin)==0):
         time.sleep(.000010)
-        #print("low")
     signal_high=time.time()
     while (wiringpi.digitalRead(echopin)==1):
         time.sleep(.00001)
     signal_low = time.time()
     time_passed = signal_low - signal_high
     distance= time_passed *17000
+    #afstand lezen klaar
+
+    #geeft de tijd van nu
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
-    if(distance<5) or (wiringpi.digitalRead(buttontrigger)==1):
-        triggercounter +=1
-        status="triggered"
-        lcd(triggercounter,current_time,status)
-        alarmlightson()
-        motordraai(500)
+    #tijdlezen klaar
+
+    if(distance<5) or (wiringpi.digitalRead(buttontrigger)==1): 
+#kijkt of dat de afstand van de sensor klein genoeg is dater een muis in de val kan zitten of kijkt of dat ik manueel de knop heb ingedrukt
+        motordraai(500) #doet de motor draaien zodat de deur dicht gaat
+        triggercounter +=1 #zet trigcounter eentje hoger
+        status="triggered" #zet status op triggered
+        lcd(triggercounter,current_time,status) #geeft de data door naar de lcd
+        alarmlightson() #zet het alarm aan
+
     
-    if(wiringpi.digitalRead(buttonreset)==1):
-        status ="armed"
-        alarmlightoff()
-        motordraaireverse(500)
-    lcd(triggercounter, current_time, status)
-    ubeac(triggercounter,current_time,status)
+    if(wiringpi.digitalRead(buttonreset)==1): #kijkt of dat ik de reset knop in heb gedrukt
+        status ="armed" #zet dan status op armed
+        alarmlightoff() #zet allarm uit
+        motordraaireverse(500) # laat de motor terug draaien
+    lcd(triggercounter, current_time, status) #stuurt een update naar lcd ook al gebeurt er niks
+    ubeac(triggercounter,current_time,status) #stuurt een update naar ubeac ook al gebeurt er niks
+    time.sleep(.5)
 
 
 except KeyboardInterrupt:
@@ -193,5 +196,4 @@ except KeyboardInterrupt:
     lcd_1.set_backlight(0)
     DeactivateLCD()
     alarmlightoff()
-
     print("\nProgram terminated")
