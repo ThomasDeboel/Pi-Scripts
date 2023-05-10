@@ -4,7 +4,7 @@ import sys
 
 wiringpi.wiringPiSetup()
 
-pinRelay = 3
+pinRelay = 15
 
 wiringpi.pinMode(pinRelay,1)
 while True:
