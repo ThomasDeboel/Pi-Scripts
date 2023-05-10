@@ -175,15 +175,23 @@ try:
         triggercounter +=1
         status="triggered"
         lcd(triggercounter,current_time,status)
-        alarmlightson
+        alarmlightson()
         motordraai(500)
     
     if(wiringpi.digitalRead(buttonreset)==1):
         status ="armed"
-        alarmlightoff
+        alarmlightoff()
         motordraaireverse(500)
     lcd(triggercounter, current_time, status)
+    ubeac(triggercounter,current_time,status)
 
 
 except KeyboardInterrupt:
     print("stopping")
+    lcd_1.clear()
+    lcd_1.refresh()
+    lcd_1.set_backlight(0)
+    DeactivateLCD()
+    alarmlightoff()
+
+    print("\nProgram terminated")
