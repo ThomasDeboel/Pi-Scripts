@@ -15,6 +15,7 @@ wiringpi.wiringPiSetup()
 #triggercounter 
 triggercounter = 0 #start the counter at 0
 status ="armed" #set status as armed
+statusint =0 #set status as armed
 #triggercounter end
 
 #motor 
@@ -136,14 +137,14 @@ def lcd(triggercounter, currenttime,status): #laat lcd werken met de currenttime
     lcd_1.refresh()
     DeactivateLCD()
 
-def ubeac(triggercount, time, status):
+def ubeac(triggercount, time, statusint):
     data= {
             " id": uid,
             " sensors ":[{
             "id": 'aantalTrigs',
             ' data': triggercounter},
-            {'id': 'Status',
-            'data':status}]
+            {'id': 'status',
+            'data':statusint}]
     }
     r=requests.post(url, verify=False, json=data)
 
@@ -174,12 +175,14 @@ try:
         motordraai(500) #doet de motor draaien zodat de deur dicht gaat
         triggercounter +=1 #zet trigcounter eentje hoger
         status="triggered" #zet status op triggered
+        statusint = 1 #zet status op 1 (voor ubeac)
         lcd(triggercounter,current_time,status) #geeft de data door naar de lcd
         alarmlightson() #zet het alarm aan
 
     
     if(wiringpi.digitalRead(buttonreset)==1): #kijkt of dat ik de reset knop in heb gedrukt
         status ="armed" #zet dan status op armed
+        statusint= 0 #zet de status op 0 (voor ubeac)
         alarmlightoff() #zet allarm uit
         motordraaireverse(500) # laat de motor terug draaien
     lcd(triggercounter, current_time, status) #stuurt een update naar lcd ook al gebeurt er niks
