@@ -14,6 +14,7 @@ wiringpi.wiringPiSetup()
 
 #triggercounter 
 triggercounter = 0 #start the counter at 0
+status ="armed" #set status as armed
 #triggercounter end
 
 #motor 
@@ -118,9 +119,6 @@ def motordraaireverse(aantalturns): #laat de motor draaien voor "aantal turns in
 
 def alarmlightson(): #turns alarm on met alternerende led
     wiringpi.digitalWrite(alarmpin,1)
-    time.sleep(1)
-    wiringpi.digitalWrite(alarmpin,0)
-    time.sleep(1)
 
 def alarmlightoff(): #turns alarm light off
     wiringpi.digitalWrite(alarmpin,0)
@@ -171,7 +169,7 @@ try:
     current_time = now.strftime("%H:%M:%S")
     #tijdlezen klaar
 
-    if(distance<5) or (wiringpi.digitalRead(buttontrigger)==1): 
+    if(distance<5) or (wiringpi.digitalRead(buttontrigger)==1) and (status!="triggered"): 
 #kijkt of dat de afstand van de sensor klein genoeg is dater een muis in de val kan zitten of kijkt of dat ik manueel de knop heb ingedrukt
         motordraai(500) #doet de motor draaien zodat de deur dicht gaat
         triggercounter +=1 #zet trigcounter eentje hoger
