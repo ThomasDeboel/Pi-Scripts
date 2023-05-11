@@ -187,7 +187,7 @@ try:
     time.sleep(.5)
 
 
-except KeyboardInterrupt:
+except KeyboardInterrupt:#set everything to off
     print("stopping")
     lcd_1.clear()
     lcd_1.refresh()
