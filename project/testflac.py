@@ -170,70 +170,10 @@ def trigg():
     motordraai(500) #doet de motor draaien zodat de deur dicht gaat
     status="triggered" #zet status op triggered
     statusint = 1 #zet status op 1 (voor ubeac)
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
     lcd(triggercounter,current_time,status) #geeft de data door naar de lcd
-    return status, statusint,1
+    return 
 
 
-def runnapp():
-    print("running app")
-    app.run()
-
-x =threading.Thread(target=runnapp)
-try:
-    while True:
-        #onderstaande code leest de afstand
-        wiringpi.digitalWrite(trgpin, 1)
-        time.sleep(.000010)
-        wiringpi.digitalWrite(trgpin, 0)
-        print("send signal")
-        while (wiringpi.digitalRead(echopin)==0):
-            time.sleep(.000010)
-        signal_high=time.time()
-        while (wiringpi.digitalRead(echopin)==1):
-            time.sleep(.00001)
-        signal_low = time.time()
-        time_passed = signal_low - signal_high
-        distance= time_passed *17000
-        #afstand lezen klaar
-
-        #geeft de tijd van nu
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        #tijdlezen klaar
-        print(status)
-        if(((distance<15) or (wiringpi.digitalRead(buttontrigger)==0)) and (status!="triggered")): 
-            print("this is triggered")
-            #kijkt of dat de afstand van de sensor klein genoeg is dater een muis in de val kan zitten of kijkt of dat ik manueel de knop heb ingedrukt
-            alarmlightson() #zet het alarm aan
-            motordraai(500) #doet de motor draaien zodat de deur dicht gaat
-            triggercounter +=1 #zet trigcounter eentje hoger
-            status="triggered" #zet status op triggered
-            statusint = 1 #zet status op 1 (voor ubeac)
-            lcd(triggercounter,current_time,status) #geeft de data door naar de lcd
-
-
-
-        if((wiringpi.digitalRead(buttonreset)==0) and (status =="triggered")): #kijkt of dat ik de reset knop in heb gedrukt
-            print("reset knop")
-            status ="armed" #zet dan status op armed
-            statusint= 0 #zet de status op 0 (voor ubeac)
-            alarmlightoff() #zet allarm uit
-            motordraaireverse(20) # laat de motor terug draaien
-        lcd(triggercounter, current_time, status) #stuurt een update naar lcd ook al gebeurt er niks
-        ubeac(triggercounter,statusint) #stuurt een update naar ubeac ook al gebeurt er niks
-        time.sleep(.5)
-        print("loop")
-
-
-except KeyboardInterrupt:#set everything to off
-    print("stopping")
-    lcd_1.clear()
-    lcd_1.refresh()
-    lcd_1.set_backlight(0)
-    DeactivateLCD()
-    alarmlightoff()
-    wiringpi.digitalWrite(pin_4,0)
-    wiringpi.digitalWrite(pin_3,0)
-    wiringpi.digitalWrite(pin_2,0)
-    wiringpi.digitalWrite(pin_1,0)
-    print("\nProgram terminated")
+app.run(host="0.0.0.0")

@@ -2,8 +2,8 @@ import time
 import wiringpi
 import sys
 
-trgpin = 7 #pin 5 (w1)
-echopin= 8 #pin 7 (w2)
+trgpin = 1 #pin 5 (w1)
+echopin= 0 #pin 7 (w2)
 wiringpi.wiringPiSetup()
 wiringpi.pinMode(trgpin,1)
 wiringpi.pinMode(echopin,0)
@@ -15,13 +15,13 @@ while True:
     print("send signal")
     while (wiringpi.digitalRead(echopin)==0):
         time.sleep(.000010)
-        #print("low")
+        # print("low")
     signal_high=time.time()
     while (wiringpi.digitalRead(echopin)==1):
         time.sleep(.00001)
     signal_low = time.time()
     time_passed = signal_low - signal_high
-    #print(time_passed)
+    print(time_passed)
     distance= time_passed *17000
     print(distance)
     time.sleep(.5)
