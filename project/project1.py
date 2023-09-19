@@ -179,7 +179,7 @@ try:
             motordraai(500) #doet de motor draaien zodat de deur dicht gaat
             triggercounter +=1 #zet trigcounter eentje hoger
             status="triggered" #zet status op triggered
-            statusint = 1 #zet status op 1 (voor ubeac)
+            statusint = 100 #zet status op 1 (voor ubeac)
             lcd(triggercounter,current_time,status) #geeft de data door naar de lcd
 
 
@@ -207,4 +207,5 @@ except KeyboardInterrupt:#set everything to off
     wiringpi.digitalWrite(pin_3,0)
     wiringpi.digitalWrite(pin_2,0)
     wiringpi.digitalWrite(pin_1,0)
-    print("\nProgram terminated")
+    print("\nProgram terminated ")
+    
